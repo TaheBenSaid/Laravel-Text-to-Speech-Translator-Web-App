@@ -1,0 +1,106 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+.audio-player {
+    @apply w-full h-10 bg-gray-100 rounded-lg border border-gray-300;
+}
+
+.audio-player::-webkit-media-controls-panel {
+    @apply bg-gray-100;
+}
+
+.audio-player::-webkit-media-controls-play-button,
+.audio-player::-webkit-media-controls-pause-button {
+    @apply bg-blue-600 rounded-full;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.toast-enter {
+    animation: slideInRight 0.3s ease-out;
+}
+
+.toast-exit {
+    animation: slideOutRight 0.3s ease-in;
+}
+
+.history-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.history-scroll::-webkit-scrollbar-track {
+    @apply bg-gray-100 rounded-full;
+}
+
+.history-scroll::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+}
+
+.history-scroll::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+}
+
+@media (max-width: 640px) {
+    .text-responsive {
+        @apply text-sm;
+    }
+}
+
+.focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+}
+
+.btn-hover {
+    @apply transition-all duration-200 ease-in-out;
+}
+
+.btn-hover:hover {
+    @apply transform scale-105;
+}
+
+.card-hover {
+    @apply transition-all duration-200 ease-in-out;
+}
+
+.card-hover:hover {
+    @apply shadow-xl transform -translate-y-1;
+}
