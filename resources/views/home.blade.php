@@ -113,6 +113,7 @@
                             <audio id="audioPlayer" controls class="flex-1">
                                 Your browser does not support the audio element.
                             </audio>
+                            <div id="audioContainer" class="flex-1"></div>
                             <button 
                                 id="downloadBtn" 
                                 class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
@@ -254,13 +255,26 @@ function displayResults(translation) {
     document.getElementById('targetLanguageLabel').textContent = translation.target_language;
     
     const audioPlayer = document.getElementById('audioPlayer');
+    const audioContainer = document.getElementById('audioContainer');
+    
     if (translation.audio_url) {
-        audioPlayer.src = translation.audio_url;
-        audioPlayer.style.display = 'block';
-        document.getElementById('downloadBtn').style.display = 'inline-flex';
-        currentTranslationId = translation.id;
+        if (translation.audio_url.startsWith('browser-tts:')) {
+            // Handle browser-based TTS
+            const ttsData = JSON.parse(atob(translation.audio_url.replace('browser-tts:', '')));
+            setupBrowserTTS(ttsData, audioContainer);
+            audioPlayer.style.display = 'none';
+            document.getElementById('downloadBtn').style.display = 'none';
+        } else {
+            // Handle regular audio files
+            audioPlayer.src = translation.audio_url;
+            audioPlayer.style.display = 'block';
+            audioContainer.innerHTML = '';
+            document.getElementById('downloadBtn').style.display = 'inline-flex';
+            currentTranslationId = translation.id;
+        }
     } else {
         audioPlayer.style.display = 'none';
+        audioContainer.innerHTML = '';
         document.getElementById('downloadBtn').style.display = 'none';
     }
     
@@ -367,6 +381,96 @@ function playAudio(audioUrl) {
 function showLoading(show) {
     const overlay = document.getElementById('loadingOverlay');
     overlay.classList.toggle('hidden', !show);
+}
+
+function setupBrowserTTS(ttsData, container) {
+    container.innerHTML = `
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM15.657 6.343a1 1 0 011.414 0A9.972 9.972 0 0119 12a9.972 9.972 0 01-1.929 5.657 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 12a7.971 7.971 0 00-1.343-4.243 1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">Browser Text-to-Speech</p>
+                        <p class="text-xs text-gray-500">Language: ${ttsData.language}</p>
+                    </div>
+                </div>
+                <button id="playTTSBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span>Play</span>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    const playBtn = container.querySelector('#playTTSBtn');
+    playBtn.addEventListener('click', () => {
+        playBrowserTTS(ttsData, playBtn);
+    });
+}
+
+function playBrowserTTS(ttsData, button) {
+    if (!('speechSynthesis' in window)) {
+        showToast('Text-to-speech not supported in this browser', 'error');
+        return;
+    }
+    
+    const originalText = button.innerHTML;
+    button.innerHTML = `
+        <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>Playing...</span>
+    `;
+    button.disabled = true;
+    
+    const utterance = new SpeechSynthesisUtterance(ttsData.text);
+    
+    // Try the specific locale first, then fallback to base language
+    const langCode = ttsData.lang_code;
+    const baseLang = langCode.split('-')[0];
+    
+    utterance.lang = langCode;
+    utterance.rate = 0.8;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+    
+    // Debug: Log available voices for Portuguese
+    if (ttsData.language === 'Portuguese') {
+        const voices = speechSynthesis.getVoices();
+        const portugueseVoices = voices.filter(voice => voice.lang.startsWith('pt'));
+        console.log('Available Portuguese voices:', portugueseVoices);
+        console.log('Using language code:', langCode);
+    }
+    
+    utterance.onend = () => {
+        button.innerHTML = originalText;
+        button.disabled = false;
+    };
+    
+    utterance.onerror = (event) => {
+        console.log('TTS Error:', event.error, 'for language:', ttsData.language, 'code:', langCode);
+        
+        // If specific locale fails, try base language
+        if (utterance.lang === langCode && baseLang !== langCode) {
+            console.log('Trying fallback to base language:', baseLang);
+            utterance.lang = baseLang;
+            speechSynthesis.speak(utterance);
+            return;
+        }
+        
+        button.innerHTML = originalText;
+        button.disabled = false;
+        showToast(`Error playing ${ttsData.language} audio: ${event.error}`, 'error');
+    };
+    
+    speechSynthesis.speak(utterance);
 }
 
 function showToast(message, type = 'info') {

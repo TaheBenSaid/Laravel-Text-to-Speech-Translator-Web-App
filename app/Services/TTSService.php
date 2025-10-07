@@ -23,7 +23,12 @@ class TTSService
             }
         }
 
-        return $this->generateMockAudio($text, $language);
+        // Return a special identifier for browser-based TTS
+        return 'browser-tts:' . base64_encode(json_encode([
+            'text' => $text,
+            'language' => $language,
+            'lang_code' => $this->getLanguageCode($language)
+        ]));
     }
 
     private function generateWithOpenAI(string $text, string $language, string $apiKey): ?string
@@ -203,7 +208,7 @@ class TTSService
     {
         $voices = [
             'ar' => 'alloy',
-            'fr' => 'nova',
+            'pt' => 'nova',
             'es' => 'shimmer',
             'hi' => 'echo',
             'zh' => 'fable',
@@ -216,14 +221,14 @@ class TTSService
     private function getLanguageCode(string $language): string
     {
         $languageCodes = [
-            'Arabic' => 'ar',
-            'French' => 'fr',
-            'Spanish' => 'es',
-            'Hindi' => 'hi',
-            'Chinese' => 'zh',
+            'Arabic' => 'ar-SA',
+            'Portuguese' => 'pt-BR',
+            'Spanish' => 'es-ES',
+            'Hindi' => 'hi-IN',
+            'Chinese' => 'zh-CN',
         ];
 
-        return $languageCodes[$language] ?? 'en';
+        return $languageCodes[$language] ?? 'en-US';
     }
 
     public function cleanupOldAudioFiles(int $hoursOld = 24): void

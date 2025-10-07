@@ -33,7 +33,7 @@ class TranslateController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'text' => 'required|string|max:1000',
-            'target_language' => 'required|string|in:Arabic,French,Spanish,Hindi,Chinese',
+            'target_language' => 'required|string|in:Arabic,Portuguese,Spanish,Hindi,Chinese',
         ]);
 
         if ($validator->fails()) {
@@ -119,10 +119,11 @@ class TranslateController extends Controller
     {
         try {
             $this->ttsService->cleanupOldAudioFiles();
+            Translation::truncate();
             
             return response()->json([
                 'success' => true,
-                'message' => 'Old audio files cleaned up successfully'
+                'message' => 'Cleanup completed: old audio files and translation history cleared'
             ]);
         } catch (\Exception $e) {
             return response()->json([

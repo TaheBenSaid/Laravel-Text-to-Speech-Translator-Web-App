@@ -53,7 +53,7 @@ class TranslationService
     {
         $defaultPatterns = [
             'Arabic' => 'هذا نص تجريبي للترجمة',
-            'French' => 'Ceci est un texte de traduction d\'exemple',
+            'Portuguese' => 'Este é um texto de tradução de exemplo',
             'Spanish' => 'Este es un texto de traducción de ejemplo',
             'Hindi' => 'यह एक उदाहरण अनुवाद पाठ है',
             'Chinese' => '这是一个示例翻译文本',
@@ -67,7 +67,7 @@ class TranslationService
     {
         $languageCodes = [
             'Arabic' => 'ar',
-            'French' => 'fr',
+            'Portuguese' => 'pt',
             'Spanish' => 'es',
             'Hindi' => 'hi',
             'Chinese' => 'zh',
@@ -90,16 +90,16 @@ class TranslationService
                 'how are you' => 'كيف حالك',
                 'default' => 'هذا نص تجريبي للترجمة'
             ],
-            'French' => [
-                'hello world' => 'bonjour le monde',
-                'good morning' => 'bonjour',
-                'good morning my friend' => 'bonjour mon ami',
-                'good morning my friend i hope this projects will please you' => 'bonjour mon ami, j\'espère que ces projets vous plairont',
-                'hey man i need your help in my project' => 'hé mec, j\'ai besoin de ton aide pour mon projet',
-                'hey man i need you so much' => 'hé mec, j\'ai tellement besoin de toi',
-                'thank you' => 'merci',
-                'how are you' => 'comment allez-vous',
-                'default' => 'Ceci est un texte de traduction d\'exemple'
+            'Portuguese' => [
+                'hello world' => 'olá mundo',
+                'good morning' => 'bom dia',
+                'good morning my friend' => 'bom dia meu amigo',
+                'good morning my friend i hope this projects will please you' => 'bom dia meu amigo, espero que estes projetos te agradem',
+                'hey man i need your help in my project' => 'ei cara, preciso da sua ajuda no meu projeto',
+                'hey man i need you so much' => 'ei cara, preciso muito de você',
+                'thank you' => 'obrigado',
+                'how are you' => 'como você está',
+                'default' => 'Este é um texto de tradução de exemplo'
             ],
             'Spanish' => [
                 'hello world' => 'hola mundo',
@@ -156,7 +156,7 @@ class TranslationService
     {
         $simpleTranslations = [
             'Arabic' => 'هذا نص مترجم: ' . $text,
-            'French' => 'Ceci est un texte traduit: ' . $text,
+            'Portuguese' => 'Este é um texto traduzido: ' . $text,
             'Spanish' => 'Este es un texto traducido: ' . $text,
             'Hindi' => 'यह एक अनुवादित पाठ है: ' . $text,
             'Chinese' => '这是一个翻译文本: ' . $text,
@@ -169,7 +169,7 @@ class TranslationService
     {
         return [
             'Arabic' => 'العربية',
-            'French' => 'Français',
+            'Portuguese' => 'Português',
             'Spanish' => 'Español',
             'Hindi' => 'हिन्दी',
             'Chinese' => '中文',
