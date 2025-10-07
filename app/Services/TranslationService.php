@@ -7,9 +7,6 @@ use Illuminate\Support\Facades\Log;
 
 class TranslationService
 {
-    /**
-     * Translate text using MyMemory API
-     */
     public function translate(string $text, string $targetLanguage): string
     {
         try {

@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Storage;
 
 class TTSService
 {
-    /**
-     * Generate speech audio from text
-     */
     public function generateSpeech(string $text, string $language = 'en'): ?string
     {
         $apiKey = config('services.openai.api_key');
@@ -23,7 +20,6 @@ class TTSService
             }
         }
 
-        // Return a special identifier for browser-based TTS
         return 'browser-tts:' . base64_encode(json_encode([
             'text' => $text,
             'language' => $language,
@@ -243,7 +239,6 @@ class TTSService
             }
         }
 
-        // For browser TTS, create a placeholder file with instructions
         $filename = 'browser_tts_' . uniqid() . '.txt';
         $path = 'audio/' . $filename;
         

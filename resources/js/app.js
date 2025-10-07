@@ -25,5 +25,4 @@ document.addEventListener('DOMContentLoaded', function() {
         window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.getAttribute('content');
     }
     
-    console.log('App initialized');
 });

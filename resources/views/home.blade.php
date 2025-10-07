@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="px-4 py-6 sm:px-0">
-    <!-- Header Section -->
     <div class="text-center mb-8">
         <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
             Translate & Speak Any Text
@@ -12,13 +11,11 @@
         </p>
     </div>
 
-    <!-- Main Translation Form -->
     <div class="max-w-4xl mx-auto">
         <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-8 transition-colors duration-300">
             <form id="translationForm" class="space-y-6">
                 @csrf
                 
-                <!-- Text Input -->
                 <div>
                     <label for="inputText" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Enter English Text
@@ -38,7 +35,6 @@
                     </div>
                 </div>
 
-                <!-- Language Selection -->
                 <div>
                     <label for="targetLanguage" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Select Target Language
@@ -56,7 +52,6 @@
                     </select>
                 </div>
 
-                <!-- Voice Options -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="voiceSpeed" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -90,7 +85,6 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="flex flex-col sm:flex-row gap-4">
                     <button 
                         type="submit" 
@@ -116,13 +110,11 @@
             </form>
         </div>
 
-        <!-- Results Section -->
         <div id="resultsSection" class="hidden">
             <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-8 transition-colors duration-300">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Translation Results</h3>
                 
                 <div class="space-y-4">
-                    <!-- Original Text -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Original Text (English)</label>
                         <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-md border dark:border-gray-600">
@@ -130,7 +122,6 @@
                         </div>
                     </div>
 
-                    <!-- Translated Text -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Translated Text (<span id="targetLanguageLabel"></span>)
@@ -140,7 +131,6 @@
                         </div>
                     </div>
 
-                    <!-- Audio Player -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Audio Playback</label>
                         <div class="flex items-center space-x-4">
@@ -163,7 +153,6 @@
             </div>
         </div>
 
-        <!-- Recent Translations -->
         <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 transition-colors duration-300">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Translations</h3>
             <div id="recentTranslations" class="space-y-3">
@@ -223,7 +212,6 @@
     </div>
 </div>
 
-<!-- History Modal -->
 <div id="historyModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
     <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 transition-colors duration-300">
         <div class="mt-3">
@@ -236,7 +224,6 @@
                 </button>
             </div>
             <div id="historyContent" class="max-h-96 overflow-y-auto">
-                <!-- History content will be loaded here -->
             </div>
         </div>
     </div>
@@ -307,13 +294,11 @@ function displayResults(translation) {
     
     if (translation.audio_url) {
         if (translation.audio_url.startsWith('browser-tts:')) {
-            // Handle browser-based TTS
             const ttsData = JSON.parse(atob(translation.audio_url.replace('browser-tts:', '')));
             setupBrowserTTS(ttsData, audioContainer);
             audioPlayer.style.display = 'none';
             document.getElementById('downloadBtn').style.display = 'none';
         } else {
-            // Handle regular audio files
             audioPlayer.src = translation.audio_url;
             audioPlayer.style.display = 'block';
             audioContainer.innerHTML = '';
@@ -356,13 +341,11 @@ function addToRecentTranslations(translation) {
     const recentTranslationsContainer = document.getElementById('recentTranslations');
     if (!recentTranslationsContainer) return;
     
-    // Remove the "no translations" message if it exists
     const noTranslationsMsg = recentTranslationsContainer.querySelector('p');
     if (noTranslationsMsg && noTranslationsMsg.textContent.includes('No recent translations')) {
         noTranslationsMsg.remove();
     }
     
-    // Create the new translation element
     const newTranslationElement = document.createElement('div');
     newTranslationElement.className = 'border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors';
     newTranslationElement.innerHTML = `
@@ -399,7 +382,6 @@ function addToRecentTranslations(translation) {
         </div>
     `;
     
-    // Add to the top of the recent translations list
     const firstChild = recentTranslationsContainer.firstElementChild;
     if (firstChild) {
         recentTranslationsContainer.insertBefore(newTranslationElement, firstChild);
@@ -407,7 +389,6 @@ function addToRecentTranslations(translation) {
         recentTranslationsContainer.appendChild(newTranslationElement);
     }
     
-    // Limit to 5 recent translations
     const translations = recentTranslationsContainer.children;
     if (translations.length > 5) {
         recentTranslationsContainer.removeChild(translations[translations.length - 1]);
@@ -490,7 +471,6 @@ document.getElementById('cleanupBtn').addEventListener('click', async function()
 
 function playAudio(audioUrl) {
     if (audioUrl.startsWith('browser-tts:')) {
-        // Handle browser TTS
         const ttsData = JSON.parse(atob(audioUrl.replace('browser-tts:', '')));
         
         if (!('speechSynthesis' in window)) {
@@ -510,7 +490,6 @@ function playAudio(audioUrl) {
         
         speechSynthesis.speak(utterance);
     } else {
-        // Handle regular audio files
         const audio = new Audio(audioUrl);
         audio.play().catch(error => {
             showToast('Error playing audio', 'error');
@@ -570,7 +549,6 @@ function playBrowserTTS(ttsData, button) {
     `;
     button.disabled = true;
     
-    // Wait for voices to load
     const speakWithVoice = () => {
         button.innerHTML = `
             <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -582,7 +560,6 @@ function playBrowserTTS(ttsData, button) {
         
         const utterance = new SpeechSynthesisUtterance(ttsData.text);
         
-        // Try the specific locale first, then fallback to base language
         const langCode = ttsData.lang_code;
         const baseLang = langCode.split('-')[0];
         
@@ -591,27 +568,13 @@ function playBrowserTTS(ttsData, button) {
         utterance.pitch = parseFloat(document.getElementById('voicePitch').value);
         utterance.volume = 1;
         
-        // Use browser's default voice selection
-        
-        // Debug: Log available voices for Portuguese
-        if (ttsData.language === 'Portuguese') {
-            const voices = speechSynthesis.getVoices();
-            const portugueseVoices = voices.filter(voice => voice.lang.startsWith('pt'));
-            console.log('Available Portuguese voices:', portugueseVoices);
-            console.log('Using language code:', langCode);
-        }
-        
         utterance.onend = () => {
             button.innerHTML = originalText;
             button.disabled = false;
         };
         
         utterance.onerror = (event) => {
-            console.log('TTS Error:', event.error, 'for language:', ttsData.language, 'code:', langCode);
-            
-            // If specific locale fails, try base language
             if (utterance.lang === langCode && baseLang !== langCode) {
-                console.log('Trying fallback to base language:', baseLang);
                 utterance.lang = baseLang;
                 speechSynthesis.speak(utterance);
                 return;
@@ -625,7 +588,6 @@ function playBrowserTTS(ttsData, button) {
         speechSynthesis.speak(utterance);
     };
     
-    // Check if voices are loaded, if not wait for them
     if (speechSynthesis.getVoices().length === 0) {
         speechSynthesis.addEventListener('voiceschanged', () => {
             speakWithVoice();
@@ -661,9 +623,7 @@ function showToast(message, type = 'info') {
     }, 5000);
 }
 
-// Voice controls and dark mode functionality
 document.addEventListener('DOMContentLoaded', function() {
-    // Voice controls
     const speedSlider = document.getElementById('voiceSpeed');
     const pitchSlider = document.getElementById('voicePitch');
     const speedValue = document.getElementById('speedValue');
@@ -681,13 +641,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Dark mode functionality
     const darkModeToggle = document.getElementById('darkModeToggle');
     const darkModeIcon = document.getElementById('darkModeIcon');
     const html = document.documentElement;
     
     if (darkModeToggle && darkModeIcon) {
-        // Check for saved theme preference or default to light mode
         const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
             html.classList.add('dark');
