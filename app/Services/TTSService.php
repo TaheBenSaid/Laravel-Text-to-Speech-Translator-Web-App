@@ -231,6 +231,36 @@ class TTSService
         return $languageCodes[$language] ?? 'en-US';
     }
 
+    public function generateDownloadableAudio(string $text, string $language, array $voiceOptions = []): string
+    {
+        $apiKey = config('services.openai.api_key');
+        
+        if ($apiKey) {
+            try {
+                return $this->generateWithOpenAI($text, $language, $apiKey, $voiceOptions);
+            } catch (\Exception $e) {
+                Log::warning('TTS API failed for download', ['error' => $e->getMessage()]);
+            }
+        }
+
+        // For browser TTS, create a placeholder file with instructions
+        $filename = 'browser_tts_' . uniqid() . '.txt';
+        $path = 'audio/' . $filename;
+        
+        $audioData = [
+            'text' => $text,
+            'language' => $language,
+            'lang_code' => $this->getLanguageCode($language),
+            'voice_options' => $voiceOptions,
+            'generated_at' => now()->toISOString(),
+            'note' => 'This is a browser TTS placeholder. Use the play button for actual audio.'
+        ];
+        
+        Storage::disk('public')->put($path, json_encode($audioData, JSON_PRETTY_PRINT));
+        
+        return Storage::url($path);
+    }
+
     public function cleanupOldAudioFiles(int $hoursOld = 24): void
     {
         $files = Storage::disk('public')->files('audio');

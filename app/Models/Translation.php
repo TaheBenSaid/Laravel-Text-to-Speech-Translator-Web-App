@@ -16,6 +16,7 @@ class Translation extends Model
         'translated_text',
         'target_language',
         'audio_url',
+        'downloadable_audio_url',
     ];
 
     /**

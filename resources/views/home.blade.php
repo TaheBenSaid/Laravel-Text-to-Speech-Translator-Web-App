@@ -4,49 +4,49 @@
 <div class="px-4 py-6 sm:px-0">
     <!-- Header Section -->
     <div class="text-center mb-8">
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
             Translate & Speak Any Text
         </h2>
-        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Enter your English text, select a target language, and get instant translation with speech audio.
         </p>
     </div>
 
     <!-- Main Translation Form -->
     <div class="max-w-4xl mx-auto">
-        <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
+        <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-8 transition-colors duration-300">
             <form id="translationForm" class="space-y-6">
                 @csrf
                 
                 <!-- Text Input -->
                 <div>
-                    <label for="inputText" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="inputText" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Enter English Text
                     </label>
                     <textarea 
                         id="inputText" 
                         name="text" 
                         rows="4" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Type your English text here..."
                         maxlength="1000"
                         required
                     ></textarea>
                     <div class="flex justify-between items-center mt-1">
-                        <span class="text-xs text-gray-500">Maximum 1000 characters</span>
-                        <span id="charCount" class="text-xs text-gray-500">0/1000</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">Maximum 1000 characters</span>
+                        <span id="charCount" class="text-xs text-gray-500 dark:text-gray-400">0/1000</span>
                     </div>
                 </div>
 
                 <!-- Language Selection -->
                 <div>
-                    <label for="targetLanguage" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="targetLanguage" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Select Target Language
                     </label>
                     <select 
                         id="targetLanguage" 
                         name="target_language" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         required
                     >
                         <option value="">Choose a language...</option>
@@ -54,6 +54,40 @@
                             <option value="{{ $code }}">{{ $name }} ({{ $code }})</option>
                         @endforeach
                     </select>
+                </div>
+
+                <!-- Voice Options -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="voiceSpeed" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Speed: <span id="speedValue">0.8</span>
+                        </label>
+                        <input 
+                            type="range" 
+                            id="voiceSpeed" 
+                            name="voice_speed" 
+                            min="0.5" 
+                            max="1.5" 
+                            step="0.1" 
+                            value="0.8"
+                            class="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                        >
+                    </div>
+                    <div>
+                        <label for="voicePitch" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Pitch: <span id="pitchValue">1.0</span>
+                        </label>
+                        <input 
+                            type="range" 
+                            id="voicePitch" 
+                            name="voice_pitch" 
+                            min="0.5" 
+                            max="2.0" 
+                            step="0.1" 
+                            value="1.0"
+                            class="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                        >
+                    </div>
                 </div>
 
                 <!-- Action Buttons -->
@@ -84,25 +118,25 @@
 
         <!-- Results Section -->
         <div id="resultsSection" class="hidden">
-            <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Translation Results</h3>
+            <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-8 transition-colors duration-300">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Translation Results</h3>
                 
                 <div class="space-y-4">
                     <!-- Original Text -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Original Text (English)</label>
-                        <div class="p-3 bg-gray-50 rounded-md border">
-                            <p id="originalText" class="text-gray-900"></p>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Original Text (English)</label>
+                        <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-md border dark:border-gray-600">
+                            <p id="originalText" class="text-gray-900 dark:text-white"></p>
                         </div>
                     </div>
 
                     <!-- Translated Text -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Translated Text (<span id="targetLanguageLabel"></span>)
                         </label>
-                        <div class="p-3 bg-blue-50 rounded-md border border-blue-200">
-                            <p id="translatedText" class="text-gray-900"></p>
+                        <div class="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md border border-blue-200 dark:border-blue-700">
+                            <p id="translatedText" class="text-gray-900 dark:text-white"></p>
                         </div>
                     </div>
 
@@ -130,10 +164,10 @@
         </div>
 
         <!-- Recent Translations -->
-        @if($recentTranslations->count() > 0)
         <div class="bg-white shadow-lg rounded-lg p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Translations</h3>
-            <div class="space-y-3">
+            <div id="recentTranslations" class="space-y-3">
+                @if($recentTranslations->count() > 0)
                 @foreach($recentTranslations as $translation)
                 <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
                     <div class="flex justify-between items-start">
@@ -156,23 +190,36 @@
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
                                 </svg>
                             </button>
+                            @if($translation->downloadable_audio_url)
                             <a 
-                                href="{{ route('download.audio', $translation->id) }}"
+                                href="{{ route('download.audio', $translation->id) }}?type=json"
+                                class="p-2 text-orange-600 hover:bg-orange-100 rounded-full"
+                                title="Download JSON"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </a>
+                            <a 
+                                href="{{ route('download.audio', $translation->id) }}?type=mp3"
                                 class="p-2 text-green-600 hover:bg-green-100 rounded-full"
-                                title="Download Audio"
+                                title="Download MP3"
                             >
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
                             </a>
                             @endif
+                            @endif
                         </div>
                     </div>
                 </div>
                 @endforeach
+                @else
+                <p class="text-gray-500 text-center py-4">No recent translations yet. Start translating to see them here!</p>
+                @endif
             </div>
         </div>
-        @endif
     </div>
 </div>
 
@@ -237,6 +284,7 @@ document.getElementById('translationForm').addEventListener('submit', async func
         
         if (data.success) {
             displayResults(data.translation);
+            addToRecentTranslations(data.translation);
             showToast('Translation completed successfully!', 'success');
         } else {
             showToast(data.message || 'Translation failed', 'error');
@@ -304,6 +352,68 @@ document.getElementById('closeHistoryModal').addEventListener('click', function(
     document.getElementById('historyModal').classList.add('hidden');
 });
 
+function addToRecentTranslations(translation) {
+    const recentTranslationsContainer = document.getElementById('recentTranslations');
+    if (!recentTranslationsContainer) return;
+    
+    // Remove the "no translations" message if it exists
+    const noTranslationsMsg = recentTranslationsContainer.querySelector('p');
+    if (noTranslationsMsg && noTranslationsMsg.textContent.includes('No recent translations')) {
+        noTranslationsMsg.remove();
+    }
+    
+    // Create the new translation element
+    const newTranslationElement = document.createElement('div');
+    newTranslationElement.className = 'border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors';
+    newTranslationElement.innerHTML = `
+        <div class="flex justify-between items-start">
+            <div class="flex-1">
+                <p class="text-sm text-gray-600 mb-1">
+                    <span class="font-medium">${translation.target_language}</span> • 
+                    ${translation.created_at}
+                </p>
+                <p class="text-gray-900 mb-2">${translation.input_text}</p>
+                <p class="text-blue-600">${translation.translated_text}</p>
+            </div>
+            <div class="flex space-x-2 ml-4">
+                ${translation.audio_url ? `
+                    <button onclick="playAudio('${translation.audio_url}')" class="p-2 text-blue-600 hover:bg-blue-100 rounded-full" title="Play Audio">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                    ${translation.downloadable_audio_url ? `
+                        <a href="/download/${translation.id}?type=json" class="p-2 text-orange-600 hover:bg-orange-100 rounded-full" title="Download JSON">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </a>
+                        <a href="/download/${translation.id}?type=mp3" class="p-2 text-green-600 hover:bg-green-100 rounded-full" title="Download MP3">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </a>
+                    ` : ''}
+                ` : ''}
+            </div>
+        </div>
+    `;
+    
+    // Add to the top of the recent translations list
+    const firstChild = recentTranslationsContainer.firstElementChild;
+    if (firstChild) {
+        recentTranslationsContainer.insertBefore(newTranslationElement, firstChild);
+    } else {
+        recentTranslationsContainer.appendChild(newTranslationElement);
+    }
+    
+    // Limit to 5 recent translations
+    const translations = recentTranslationsContainer.children;
+    if (translations.length > 5) {
+        recentTranslationsContainer.removeChild(translations[translations.length - 1]);
+    }
+}
+
 async function loadHistory() {
     try {
         const response = await fetch('/history', {
@@ -334,11 +444,18 @@ async function loadHistory() {
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
                                     </svg>
                                 </button>
-                                <a href="/download/${translation.id}" class="p-2 text-green-600 hover:bg-green-100 rounded-full" title="Download Audio">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
-                                </a>
+                                ${translation.downloadable_audio_url ? `
+                                    <a href="/download/${translation.id}?type=json" class="p-2 text-orange-600 hover:bg-orange-100 rounded-full" title="Download JSON">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                    </a>
+                                    <a href="/download/${translation.id}?type=mp3" class="p-2 text-green-600 hover:bg-green-100 rounded-full" title="Download MP3">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                    </a>
+                                ` : ''}
                             ` : ''}
                         </div>
                     </div>
@@ -372,10 +489,33 @@ document.getElementById('cleanupBtn').addEventListener('click', async function()
 });
 
 function playAudio(audioUrl) {
-    const audio = new Audio(audioUrl);
-    audio.play().catch(error => {
-        showToast('Error playing audio', 'error');
-    });
+    if (audioUrl.startsWith('browser-tts:')) {
+        // Handle browser TTS
+        const ttsData = JSON.parse(atob(audioUrl.replace('browser-tts:', '')));
+        
+        if (!('speechSynthesis' in window)) {
+            showToast('Text-to-speech not supported in this browser', 'error');
+            return;
+        }
+        
+        const utterance = new SpeechSynthesisUtterance(ttsData.text);
+        utterance.lang = ttsData.lang_code;
+        utterance.rate = parseFloat(document.getElementById('voiceSpeed')?.value || 0.8);
+        utterance.pitch = parseFloat(document.getElementById('voicePitch')?.value || 1.0);
+        utterance.volume = 1;
+        
+        utterance.onerror = (event) => {
+            showToast(`Error playing ${ttsData.language} audio: ${event.error}`, 'error');
+        };
+        
+        speechSynthesis.speak(utterance);
+    } else {
+        // Handle regular audio files
+        const audio = new Audio(audioUrl);
+        audio.play().catch(error => {
+            showToast('Error playing audio', 'error');
+        });
+    }
 }
 
 function showLoading(show) {
@@ -426,51 +566,73 @@ function playBrowserTTS(ttsData, button) {
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
-        <span>Playing...</span>
+        <span>Loading voices...</span>
     `;
     button.disabled = true;
     
-    const utterance = new SpeechSynthesisUtterance(ttsData.text);
-    
-    // Try the specific locale first, then fallback to base language
-    const langCode = ttsData.lang_code;
-    const baseLang = langCode.split('-')[0];
-    
-    utterance.lang = langCode;
-    utterance.rate = 0.8;
-    utterance.pitch = 1;
-    utterance.volume = 1;
-    
-    // Debug: Log available voices for Portuguese
-    if (ttsData.language === 'Portuguese') {
-        const voices = speechSynthesis.getVoices();
-        const portugueseVoices = voices.filter(voice => voice.lang.startsWith('pt'));
-        console.log('Available Portuguese voices:', portugueseVoices);
-        console.log('Using language code:', langCode);
-    }
-    
-    utterance.onend = () => {
-        button.innerHTML = originalText;
-        button.disabled = false;
-    };
-    
-    utterance.onerror = (event) => {
-        console.log('TTS Error:', event.error, 'for language:', ttsData.language, 'code:', langCode);
+    // Wait for voices to load
+    const speakWithVoice = () => {
+        button.innerHTML = `
+            <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Playing...</span>
+        `;
         
-        // If specific locale fails, try base language
-        if (utterance.lang === langCode && baseLang !== langCode) {
-            console.log('Trying fallback to base language:', baseLang);
-            utterance.lang = baseLang;
-            speechSynthesis.speak(utterance);
-            return;
+        const utterance = new SpeechSynthesisUtterance(ttsData.text);
+        
+        // Try the specific locale first, then fallback to base language
+        const langCode = ttsData.lang_code;
+        const baseLang = langCode.split('-')[0];
+        
+        utterance.lang = langCode;
+        utterance.rate = parseFloat(document.getElementById('voiceSpeed').value);
+        utterance.pitch = parseFloat(document.getElementById('voicePitch').value);
+        utterance.volume = 1;
+        
+        // Use browser's default voice selection
+        
+        // Debug: Log available voices for Portuguese
+        if (ttsData.language === 'Portuguese') {
+            const voices = speechSynthesis.getVoices();
+            const portugueseVoices = voices.filter(voice => voice.lang.startsWith('pt'));
+            console.log('Available Portuguese voices:', portugueseVoices);
+            console.log('Using language code:', langCode);
         }
         
-        button.innerHTML = originalText;
-        button.disabled = false;
-        showToast(`Error playing ${ttsData.language} audio: ${event.error}`, 'error');
+        utterance.onend = () => {
+            button.innerHTML = originalText;
+            button.disabled = false;
+        };
+        
+        utterance.onerror = (event) => {
+            console.log('TTS Error:', event.error, 'for language:', ttsData.language, 'code:', langCode);
+            
+            // If specific locale fails, try base language
+            if (utterance.lang === langCode && baseLang !== langCode) {
+                console.log('Trying fallback to base language:', baseLang);
+                utterance.lang = baseLang;
+                speechSynthesis.speak(utterance);
+                return;
+            }
+            
+            button.innerHTML = originalText;
+            button.disabled = false;
+            showToast(`Error playing ${ttsData.language} audio: ${event.error}`, 'error');
+        };
+        
+        speechSynthesis.speak(utterance);
     };
     
-    speechSynthesis.speak(utterance);
+    // Check if voices are loaded, if not wait for them
+    if (speechSynthesis.getVoices().length === 0) {
+        speechSynthesis.addEventListener('voiceschanged', () => {
+            speakWithVoice();
+        }, { once: true });
+    } else {
+        speakWithVoice();
+    }
 }
 
 function showToast(message, type = 'info') {
@@ -498,5 +660,25 @@ function showToast(message, type = 'info') {
         }
     }, 5000);
 }
+
+// Voice controls functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const speedSlider = document.getElementById('voiceSpeed');
+    const pitchSlider = document.getElementById('voicePitch');
+    const speedValue = document.getElementById('speedValue');
+    const pitchValue = document.getElementById('pitchValue');
+    
+    if (speedSlider && speedValue) {
+        speedSlider.addEventListener('input', function() {
+            speedValue.textContent = this.value;
+        });
+    }
+    
+    if (pitchSlider && pitchValue) {
+        pitchSlider.addEventListener('input', function() {
+            pitchValue.textContent = this.value;
+        });
+    }
+});
 </script>
 @endpush
