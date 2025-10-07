@@ -259,11 +259,14 @@ document.getElementById('translationForm').addEventListener('submit', async func
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
             body: JSON.stringify({
                 text: text,
-                target_language: targetLanguage
+                target_language: targetLanguage,
+                voice_speed: parseFloat(document.getElementById('voiceSpeed').value),
+                voice_pitch: parseFloat(document.getElementById('voicePitch').value)
             })
         });
         
@@ -457,7 +460,8 @@ document.getElementById('cleanupBtn').addEventListener('click', async function()
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 }
             });
             
