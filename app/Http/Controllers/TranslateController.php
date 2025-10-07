@@ -51,7 +51,6 @@ class TranslateController extends Controller
             $translatedText = $this->translationService->translate($text, $targetLanguage);
             $audioUrl = $this->ttsService->generateSpeech($translatedText, $targetLanguage);
             
-            // Generate downloadable audio with voice options
             $voiceOptions = [
                 'voice_speed' => $request->input('voice_speed', 0.8),
                 'voice_pitch' => $request->input('voice_pitch', 1.0),
@@ -111,10 +110,9 @@ class TranslateController extends Controller
     public function downloadAudio(int $id, Request $request)
     {
         $translation = Translation::findOrFail($id);
-        $downloadType = $request->query('type', 'json'); // Default to JSON
+        $downloadType = $request->query('type', 'json');
         
         if ($downloadType === 'json') {
-            // Download JSON file (browser TTS data)
             if (!$translation->downloadable_audio_url) {
                 abort(404, 'JSON file not found');
             }
@@ -127,14 +125,11 @@ class TranslateController extends Controller
             }
             
             abort(404, 'JSON file not found on disk');
-        } 
-        elseif ($downloadType === 'mp3') {
-            // Download MP3 file (actual audio)
+        } elseif ($downloadType === 'mp3') {
             if (!$translation->audio_url) {
                 abort(404, 'MP3 file not found');
             }
             
-            // For browser TTS, we can't generate actual MP3, so return a message
             if (str_contains($translation->audio_url, 'browser-tts:')) {
                 $message = "MP3 download not available for browser TTS. Use the JSON download to get the text data, or add an OpenAI API key to generate actual MP3 files.";
                 return response($message, 200)
@@ -142,7 +137,6 @@ class TranslateController extends Controller
                     ->header('Content-Disposition', 'attachment; filename="translation_' . $id . '_mp3_info.txt"');
             }
             
-            // Handle actual MP3 files (from OpenAI TTS)
             $audioPath = str_replace('/storage/', '', $translation->audio_url);
             $fullPath = storage_path('app/public/' . $audioPath);
 
