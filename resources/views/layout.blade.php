@@ -13,11 +13,6 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-        }
-    </script>
 </head>
 <body class="font-sans antialiased bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
     <div class="min-h-screen">
@@ -84,28 +79,5 @@
     <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
 
     @stack('scripts')
-    
-    <script>
-        // Dark mode functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            const darkModeIcon = document.getElementById('darkModeIcon');
-            const html = document.documentElement;
-            
-            // Check for saved theme preference or default to light mode
-            const currentTheme = localStorage.getItem('theme') || 'light';
-            if (currentTheme === 'dark') {
-                html.classList.add('dark');
-                darkModeIcon.textContent = '☀️';
-            }
-            
-            darkModeToggle.addEventListener('click', function() {
-                html.classList.toggle('dark');
-                const isDark = html.classList.contains('dark');
-                darkModeIcon.textContent = isDark ? '☀️' : '🌙';
-                localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            });
-        });
-    </script>
 </body>
 </html>

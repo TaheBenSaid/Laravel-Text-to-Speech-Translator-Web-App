@@ -164,20 +164,20 @@
         </div>
 
         <!-- Recent Translations -->
-        <div class="bg-white shadow-lg rounded-lg p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Translations</h3>
+        <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 transition-colors duration-300">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Translations</h3>
             <div id="recentTranslations" class="space-y-3">
                 @if($recentTranslations->count() > 0)
                 @foreach($recentTranslations as $translation)
-                <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <div class="flex justify-between items-start">
                         <div class="flex-1">
-                            <p class="text-sm text-gray-600 mb-1">
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
                                 <span class="font-medium">{{ $translation->target_language }}</span> • 
                                 {{ $translation->created_at->format('M j, Y g:i A') }}
                             </p>
-                            <p class="text-gray-900 mb-2">{{ Str::limit($translation->input_text, 100) }}</p>
-                            <p class="text-blue-600">{{ Str::limit($translation->translated_text, 100) }}</p>
+                            <p class="text-gray-900 dark:text-white mb-2">{{ Str::limit($translation->input_text, 100) }}</p>
+                            <p class="text-blue-600 dark:text-blue-400">{{ Str::limit($translation->translated_text, 100) }}</p>
                         </div>
                         <div class="flex space-x-2 ml-4">
                             @if($translation->audio_url)
@@ -216,7 +216,7 @@
                 </div>
                 @endforeach
                 @else
-                <p class="text-gray-500 text-center py-4">No recent translations yet. Start translating to see them here!</p>
+                <p class="text-gray-500 dark:text-gray-400 text-center py-4">No recent translations yet. Start translating to see them here!</p>
                 @endif
             </div>
         </div>
@@ -225,11 +225,11 @@
 
 <!-- History Modal -->
 <div id="historyModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-    <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white dark:bg-gray-800 dark:border-gray-700 transition-colors duration-300">
         <div class="mt-3">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-medium text-gray-900">Translation History</h3>
-                <button id="closeHistoryModal" class="text-gray-400 hover:text-gray-600">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Translation History</h3>
+                <button id="closeHistoryModal" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
@@ -661,8 +661,9 @@ function showToast(message, type = 'info') {
     }, 5000);
 }
 
-// Voice controls functionality
+// Voice controls and dark mode functionality
 document.addEventListener('DOMContentLoaded', function() {
+    // Voice controls
     const speedSlider = document.getElementById('voiceSpeed');
     const pitchSlider = document.getElementById('voicePitch');
     const speedValue = document.getElementById('speedValue');
@@ -677,6 +678,27 @@ document.addEventListener('DOMContentLoaded', function() {
     if (pitchSlider && pitchValue) {
         pitchSlider.addEventListener('input', function() {
             pitchValue.textContent = this.value;
+        });
+    }
+    
+    // Dark mode functionality
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const darkModeIcon = document.getElementById('darkModeIcon');
+    const html = document.documentElement;
+    
+    if (darkModeToggle && darkModeIcon) {
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            html.classList.add('dark');
+            darkModeIcon.textContent = '☀️';
+        }
+        
+        darkModeToggle.addEventListener('click', function() {
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            darkModeIcon.textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
         });
     }
 });

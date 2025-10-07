@@ -10,6 +10,8 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+@variant dark (.dark &);
+
 .audio-player {
     @apply w-full h-10 bg-gray-100 rounded-lg border border-gray-300;
 }
